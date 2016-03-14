@@ -245,7 +245,7 @@ void type_to_string(char *, cube);
 void type_from_string(cube *, const char *);
 int cube_from_string(cube *, const char *);
 void getcube(cube *);
-void new_cube(cube *);
+void new_cube(cube *, char * s);
 void optimize();
 int moveslen();
 int mov_len(const char*);
@@ -1528,8 +1528,8 @@ void getcube(cube * c){
 
 
 }
-void new_cube(cube * c){
-    cube_from_string(c, "WWWWWWWWWGGGGGGGGGRRRRRRRRRBBBBBBBBBOOOOOOOOOYYYYYYYYY");
+void new_cube(cube * c, char s[54]){
+    cube_from_string(c, s);
 }
 void optimize(){
     int c, n, len, lastmoveslen;
@@ -4367,6 +4367,11 @@ void KeyPress(unsigned char key, int x, int y)
     if (key == 's' || key == 'S'){
         cube CopyOfMainCube = MainCube;
         scramble(&CopyOfMainCube, 25);
+
+//        printcube(CopyOfMainCube);
+        char tmp_s[100];
+        cube_to_string(tmp_s, CopyOfMainCube);
+        printf("\n%s\n", tmp_s);
         DoMoves(moves);
         return;
     }
@@ -4479,7 +4484,11 @@ void mouseClick(int button, int state, int x, int y)
 
 int main(int argc, char **argv)
 {
-  new_cube(&MainCube);
+  if(argc != 2) {
+    printf("Usage: ./prog <string>\n");
+    exit(1);
+  }
+  new_cube(&MainCube, argv[1]);
   glutInit(&argc, argv);
   glutInitDisplayMode(GLUT_RGBA | GLUT_DOUBLE | GLUT_ALPHA | GLUT_DEPTH);
   glutInitWindowSize(640, 480);
